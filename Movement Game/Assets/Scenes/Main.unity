@@ -1168,7 +1168,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSizeWidth: 12
   gridSizeHeight: 5
-  testPrefab: {fileID: 3000693099574124087, guid: ffe255d5e7ae17f4f9c605b2cdcbe810, type: 3}
 --- !u!114 &1753003834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1297,6 +1296,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedItemGrid: {fileID: 0}
+  items:
+  - {fileID: 11400000, guid: 86741a09941b6594d9e9a4906c4895f7, type: 2}
+  - {fileID: 11400000, guid: 9d3ff955814ad0445a795faba22ade9e, type: 2}
+  itemPrefab: {fileID: 3000693099574124087, guid: ffe255d5e7ae17f4f9c605b2cdcbe810, type: 3}
+  canvasTransform: {fileID: 6837895}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
