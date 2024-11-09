@@ -54,8 +54,10 @@ public class GridController : MonoBehaviour
     private void HandleHighlight()
     {
         Vector2Int posOnGrid = GetTileGridPosition();
+
         if (oldPos == posOnGrid) return;
         oldPos = posOnGrid;
+
         if (selectedItem == null)
         {
             itemToHighlight = selectedItemGrid.GetItem(posOnGrid.x, posOnGrid.y);
