@@ -4,9 +4,7 @@ using UnityEngine;
 
 public abstract class Interactable : MonoBehaviour
 {
-    [Header("Item Variables")]
-    public float itemID;
-    public string itemName;
+    public ItemData data;
 
     public abstract void Interact();
 

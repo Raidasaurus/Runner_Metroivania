@@ -12,4 +12,5 @@ public class Keybinds : ScriptableObject
     public KeyCode crouchKey = KeyCode.LeftControl;
     public KeyCode dashKey = KeyCode.LeftShift;
     public KeyCode grappleKey = KeyCode.Mouse1;
+    public KeyCode inventoryKey = KeyCode.Tab;
 }

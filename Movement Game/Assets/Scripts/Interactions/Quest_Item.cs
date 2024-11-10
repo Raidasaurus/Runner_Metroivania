@@ -8,7 +8,7 @@ public class Quest_Item : Interactable
 
     public override void Interact()
     {
-        Debug.Log("Picked up " + itemName);
+        //Debug.Log("Picked up " + data.itemName);
         keyItem.enabled = true;
         gameObject.SetActive(false);
     }

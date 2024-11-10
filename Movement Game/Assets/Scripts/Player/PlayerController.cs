@@ -152,6 +152,12 @@ public class PlayerController : MovementScript
             }
         }
 
+        // Inventory
+        if (Input.GetKeyDown(pm.keybind.inventoryKey))
+        {
+            pm.cam.lockCursor = !pm.cam.lockCursor;
+        }
+
     }
 
 

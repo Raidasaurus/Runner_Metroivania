@@ -6,7 +6,7 @@ public class Item : Interactable
 {
     public override void Interact()
     {
-        Debug.Log("Picked up " + itemName);
+        Debug.Log("Picked up " + data.itemName);
         gameObject.SetActive(false);
     }
 }

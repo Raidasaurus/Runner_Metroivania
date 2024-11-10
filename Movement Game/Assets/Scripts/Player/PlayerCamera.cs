@@ -30,11 +30,12 @@ public class PlayerCamera : MonoBehaviour
 
     private void Update()
     {
-        if (lockCursor)
-        {
+        Cursor.visible = !lockCursor;
+        if (lockCursor)        
             Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
+        else
+            Cursor.lockState = CursorLockMode.Confined;
+
     }
 
     // Update is called once per frame
