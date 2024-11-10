@@ -12,6 +12,7 @@ public class Inventory : MonoBehaviour
     public List<Item> items = new List<Item>();
 
     [Header("References")]
+    [SerializeField] GridController gc;
     PlayerManager pm;
     PlayerUI ui;
 
@@ -19,6 +20,7 @@ public class Inventory : MonoBehaviour
     {
         pm = GetComponent<PlayerManager>();
         ui = GetComponent<PlayerUI>();
+        gc = FindObjectOfType<GridController>();
     }
     private void Update()
     {
@@ -31,6 +33,8 @@ public class Inventory : MonoBehaviour
                 items.Add((Item)currentInteractable);
                 if (pm.inventory.interactables.Contains(currentInteractable))
                     pm.inventory.interactables.Remove(currentInteractable);
+
+                gc.AddItem((Item)currentInteractable);
             }
             ui.FadeOutInteractUI();
             currentInteractable.Interact();

@@ -13,6 +13,8 @@ public class GridController : MonoBehaviour
     InventoryItem overlapItem;
     RectTransform rectT;
 
+    [SerializeField] ItemGrid inventoryGrid;
+
     [SerializeField] List<ItemData> items;
     [SerializeField] GameObject itemPrefab;
     [SerializeField] Transform canvasTransform;
@@ -90,7 +92,19 @@ public class GridController : MonoBehaviour
 
         int rand = UnityEngine.Random.Range(0, items.Count);
         inventoryItem.Set(items[rand]);
+    }
 
+    public void AddItem(Item item)
+    {
+        InventoryItem inventoryItem = Instantiate(itemPrefab).GetComponent<InventoryItem>();
+        selectedItem = inventoryItem;
+
+        rectT = inventoryItem.GetComponent<RectTransform>();
+        rectT.SetParent(canvasTransform);
+
+        inventoryItem.Set(item.data);
+        selectedItem = null;
+        InsertItem(inventoryItem, inventoryGrid);
     }
 
     private void HandleItem()
@@ -131,6 +145,7 @@ public class GridController : MonoBehaviour
                 selectedItem = overlapItem;
                 overlapItem = null;
                 rectT = selectedItem.GetComponent<RectTransform>();
+                rectT.SetAsLastSibling();
             }
         }
     }
@@ -142,5 +157,14 @@ public class GridController : MonoBehaviour
         {
             rectT = selectedItem.GetComponent<RectTransform>();
         }
+    }
+
+    private void InsertItem(InventoryItem item, ItemGrid grid)
+    {
+        Vector2Int? posOnGrid = grid.FindSpace(item);
+
+        if (posOnGrid == null) return;
+
+        grid.PlaceItem(item, posOnGrid.Value.x, posOnGrid.Value.y);
     }
 }

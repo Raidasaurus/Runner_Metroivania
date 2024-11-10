@@ -12,6 +12,7 @@ public class ItemGrid : MonoBehaviour
 
     [SerializeField] int gridSizeWidth = 12;
     [SerializeField] int gridSizeHeight = 5;
+    [SerializeField] Canvas rootCanvas;
 
     RectTransform rectTransform;
 
@@ -35,8 +36,8 @@ public class ItemGrid : MonoBehaviour
         posOnGrid.x = mousePos.x - rectTransform.position.x - 0.001f;
         posOnGrid.y = rectTransform.position.y - mousePos.y - 0.001f;
 
-        tileGridPos.x = (int)(posOnGrid.x / tileSizeWidth);
-        tileGridPos.y = (int)(posOnGrid.y / tileSizeHeight);
+        tileGridPos.x = (int)(posOnGrid.x / tileSizeWidth * rootCanvas.scaleFactor);
+        tileGridPos.y = (int)(posOnGrid.y / tileSizeHeight * rootCanvas.scaleFactor);
 
         return tileGridPos;
     }
@@ -63,6 +64,12 @@ public class ItemGrid : MonoBehaviour
             CleanGridReference(overlapItem);
         }
 
+        PlaceItem(item, xPos, yPos);
+        return true;
+    }
+
+    public void PlaceItem(InventoryItem item, int xPos, int yPos)
+    {
         RectTransform rectTransform = item.GetComponent<RectTransform>();
         rectTransform.SetParent(this.rectTransform);
 
@@ -80,7 +87,6 @@ public class ItemGrid : MonoBehaviour
         Vector2 pos = CalculatePositionOnGrid(item, xPos, yPos);
 
         rectTransform.localPosition = pos;
-        return true;
     }
 
     public Vector2 CalculatePositionOnGrid(InventoryItem item, int xPos, int yPos)
@@ -142,6 +148,39 @@ public class ItemGrid : MonoBehaviour
         if (x >= gridSizeWidth || y >= gridSizeHeight)
         {
             return false;
+        }
+
+        return true;
+    }
+
+    internal Vector2Int? FindSpace(InventoryItem item)
+    {
+        int height = gridSizeHeight - item.data.height + 1;
+        int width = gridSizeWidth - item.data.width + 1;
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (CheckAvailableSpace(x, y, item.data.width, item.data.height))
+                    return new Vector2Int(x, y);
+            }
+        }
+
+        return null;
+    }
+
+    private bool CheckAvailableSpace(int xPos, int yPos, int width, int height)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (inventoryItemSlot[xPos + x, yPos + y] != null)
+                {
+                    return false;
+                }
+            }
         }
 
         return true;
