@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+
     [Header("Conditions")]
     public bool sliding;
     public bool wallrunning;
@@ -24,5 +25,6 @@ public class PlayerManager : MonoBehaviour
     public PlayerCamera cam;
     public Inventory inventory;
     public Transform orientation;
+    public Animator aniUI;
     public Keybinds keybind;
 }

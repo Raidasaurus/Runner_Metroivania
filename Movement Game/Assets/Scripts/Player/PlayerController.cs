@@ -156,6 +156,7 @@ public class PlayerController : MovementScript
         if (Input.GetKeyDown(pm.keybind.inventoryKey))
         {
             pm.cam.lockCursor = !pm.cam.lockCursor;
+            pm.aniUI.SetTrigger("Toggle");
         }
 
     }
@@ -382,6 +383,5 @@ public class PlayerController : MovementScript
             
         }
     }
-
 
 }
