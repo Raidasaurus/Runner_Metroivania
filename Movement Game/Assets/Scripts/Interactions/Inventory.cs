@@ -30,11 +30,18 @@ public class Inventory : MonoBehaviour
         {
             if (currentInteractable is Item)
             {
-                items.Add((Item)currentInteractable);
-                if (pm.inventory.interactables.Contains(currentInteractable))
-                    pm.inventory.interactables.Remove(currentInteractable);
-
-                gc.AddItem((Item)currentInteractable);
+                if(gc.AddItem((Item)currentInteractable))
+                {
+                    items.Add((Item)currentInteractable);
+                    if (pm.inventory.interactables.Contains(currentInteractable))
+                        pm.inventory.interactables.Remove(currentInteractable);
+                }
+                else
+                {
+                    ui.interactText.text = "Cannot pick up item";
+                    ui.ChangeText("Interact", 2f);
+                    return;
+                }
             }
             ui.FadeOutInteractUI();
             currentInteractable.Interact();
@@ -59,5 +66,17 @@ public class Inventory : MonoBehaviour
         }
 
         return closestItem;
+    }
+
+    public bool SearchInventory(Item item)
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            if (item.data.itemID == items[i].data.itemID) return true;
+        }
+
+
+
+        return false;
     }
 }

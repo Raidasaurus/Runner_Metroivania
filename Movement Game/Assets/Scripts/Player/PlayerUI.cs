@@ -32,6 +32,17 @@ public class PlayerUI : MonoBehaviour
         StartCoroutine(LerpUI_TMPro(interactText, 1));
     }
 
+    public void ChangeText(string input, float delay)
+    {
+        StartCoroutine(AlterText(input, delay));
+    }
+
+    IEnumerator AlterText(string input, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        interactText.text = input;
+    }
     IEnumerator LerpUI_TMPro(TextMeshProUGUI ui, float endValue)
     {
         float startAlpha = ui.color.a;

@@ -94,17 +94,27 @@ public class GridController : MonoBehaviour
         inventoryItem.Set(items[rand]);
     }
 
-    public void AddItem(Item item)
+    public bool AddItem(Item item)
     {
         InventoryItem inventoryItem = Instantiate(itemPrefab).GetComponent<InventoryItem>();
         selectedItem = inventoryItem;
+        inventoryItem.Set(item.data);
+
+        Vector2Int? posOnGrid = inventoryGrid.FindSpace(inventoryItem);
+
+        if (posOnGrid == null)
+        {
+            Destroy(inventoryItem.gameObject);
+            return false;
+        }
 
         rectT = inventoryItem.GetComponent<RectTransform>();
         rectT.SetParent(canvasTransform);
 
-        inventoryItem.Set(item.data);
         selectedItem = null;
         InsertItem(inventoryItem, inventoryGrid);
+
+        return true;
     }
 
     private void HandleItem()

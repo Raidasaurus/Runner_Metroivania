@@ -153,7 +153,7 @@ public class ItemGrid : MonoBehaviour
         return true;
     }
 
-    internal Vector2Int? FindSpace(InventoryItem item)
+    public Vector2Int? FindSpace(InventoryItem item)
     {
         int height = gridSizeHeight - item.data.height + 1;
         int width = gridSizeWidth - item.data.width + 1;
