@@ -43,6 +43,8 @@ public class Kick : MonoBehaviour
             Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
             if (rb != null)
             {
+                if (rb.GetComponent<Kickable>()) rb.GetComponent<Kickable>().inMotion = true;
+
                 Vector3 dir = rb.position - transform.position;
                 rb.AddForce(dir.normalized * kickBackForce + Vector3.up * kickUpForce, ForceMode.Impulse);
             }

@@ -15,6 +15,8 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Speed Values")]
     public float walkSpeed;
+    [Range(0,1)]
+    public float strafeFactor;
     public float airSpeed;
     public float slideSpeed;
     public float crouchSpeed;

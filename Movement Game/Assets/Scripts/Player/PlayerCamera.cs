@@ -82,7 +82,7 @@ public class PlayerCamera : MonoBehaviour
         while (t < d)
         {
             vCam.m_Lens.Dutch = Mathf.Lerp(s, endValue, t / d);
-            t += Time.deltaTime * 40f;
+            t += Time.deltaTime * 20f;
             yield return null;
         }
 

@@ -55,11 +55,11 @@ public class PlayerController : MovementScript
 
     [Header("References")]
     PlayerManager pm;
+    [HideInInspector] public Rigidbody rb;
 
     float hInput;
     float vInput;
     Vector3 moveDir;
-    Rigidbody rb;
 
 
     public enum MovementState
@@ -240,7 +240,7 @@ public class PlayerController : MovementScript
 
     void MovePlayer()
     {
-        moveDir = pm.orientation.forward * vInput + pm.orientation.right * hInput * 0.7f;
+        moveDir = pm.orientation.forward * vInput + pm.orientation.right * (hInput * pm.strafeFactor);
 
         if (OnSlope() && !exitingSlope)
         {
@@ -251,9 +251,13 @@ public class PlayerController : MovementScript
             }
         }
         else if (grounded)
-            rb.AddForce(moveDir.normalized * moveSpeed * 10f, ForceMode.Force);
+        {
+            rb.AddForce(moveDir * moveSpeed * 10f, ForceMode.Force);
+        }
         else if (!grounded)
+        {
             rb.AddForce(moveDir.normalized * moveSpeed * 10f * airMulti, ForceMode.Force);
+        }
 
         if (!pm.wallrunning) rb.useGravity = !OnSlope();
 
