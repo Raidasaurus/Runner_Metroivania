@@ -240,7 +240,8 @@ public class PlayerController : MovementScript
 
     void MovePlayer()
     {
-        moveDir = pm.orientation.forward * vInput + pm.orientation.right * hInput;
+        moveDir = pm.orientation.forward * vInput + pm.orientation.right * hInput * 0.7f;
+
         if (OnSlope() && !exitingSlope)
         {
             rb.AddForce(GetSlopeMoveDir(moveDir) * moveSpeed * 20f, ForceMode.Force);
@@ -255,6 +256,10 @@ public class PlayerController : MovementScript
             rb.AddForce(moveDir.normalized * moveSpeed * 10f * airMulti, ForceMode.Force);
 
         if (!pm.wallrunning) rb.useGravity = !OnSlope();
+
+        if (hInput > 0 && grounded) pm.cam.DoTilt(-2f);
+        else if (hInput < 0 && grounded) pm.cam.DoTilt(2f);
+        else pm.cam.DoTilt(0f);
     }
 
     void SpeedControl()

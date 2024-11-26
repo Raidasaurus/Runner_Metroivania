@@ -8777,6 +8777,7 @@ GameObject:
   - component: {fileID: 2073709587}
   - component: {fileID: 2073709586}
   - component: {fileID: 2073709585}
+  - component: {fileID: 2073709590}
   m_Layer: 7
   m_Name: Test_Enemy (1)
   m_TagString: Untagged
@@ -8921,6 +8922,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2073709583}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2073709590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073709583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75944e2c00815734b9aaf943024fde30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resetRange: 15
+  detectionRange: 10
+  attackRange: 5
 --- !u!4 &2120083141 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1727757561725392699, guid: 0857be609cfc2264496d137c78be103a, type: 3}

@@ -4,15 +4,43 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [Header("Detection Ranges")]
+    public float resetRange;
+    public float detectionRange;
+    public float attackRange;
+
+    private void Update()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    void StateMachine()
     {
+
+    }
+
+    public enum EnemyState
+    {
+        idle,
+        patrol,
+        search,
+        attack
+    }
+
+
+    private void OnDrawGizmosSelected()
+    {
+        // Attack Range
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);        
         
+        // Detection Range
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);        
+        
+        // Reset Range
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, resetRange);
+
     }
 }
