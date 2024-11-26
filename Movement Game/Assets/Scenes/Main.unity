@@ -11331,7 +11331,7 @@ MonoBehaviour:
   grappling: 0
   freeze: 0
   walkSpeed: 8
-  strafeFactor: 0.25
+  strafeFactor: 0.4
   airSpeed: 5
   slideSpeed: 13
   crouchSpeed: 5
@@ -12840,7 +12840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99934fc1b54be724caa294ed3a1953be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DebugSpeed: 0
+  DebugSpeed: {x: 0, y: 0, z: 0}
   DebugDesiredMoveSpeed: 0
   state: 0
   lerpMultiplier: 45

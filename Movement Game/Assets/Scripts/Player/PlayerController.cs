@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MovementScript
 {
     [Header("Debug")]
-    public float DebugSpeed;
+    public Vector3 DebugSpeed;
     public float DebugDesiredMoveSpeed;
     public MovementState state;
 
@@ -104,7 +104,7 @@ public class PlayerController : MovementScript
             rb.drag = groundDrag;
 
 
-        DebugSpeed = new Vector3(rb.velocity.x, 0f, rb.velocity.z).magnitude;
+        DebugSpeed = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         DebugDesiredMoveSpeed = desiredMoveSpeed;
     }
 
