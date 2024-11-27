@@ -87,12 +87,8 @@ public class PlayerController : MovementScript
 
     private void Update()
     {
-
-
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.1f, whatIsGround);
         if (grounded) jumpCharges = jumpChargeTotal;
-
-
 
         GetInput();
         SpeedControl();
@@ -261,8 +257,8 @@ public class PlayerController : MovementScript
 
         if (!pm.wallrunning) rb.useGravity = !OnSlope();
 
-        if (hInput > 0 && grounded) pm.cam.DoTilt(-2f);
-        else if (hInput < 0 && grounded) pm.cam.DoTilt(2f);
+        if (hInput > 0 && grounded && pm.cam.lockCursor) pm.cam.DoTilt(-2f);
+        else if (hInput < 0 && grounded && pm.cam.lockCursor) pm.cam.DoTilt(2f);
         else pm.cam.DoTilt(0f);
     }
 

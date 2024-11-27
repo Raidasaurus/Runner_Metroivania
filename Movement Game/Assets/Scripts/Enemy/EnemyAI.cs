@@ -9,6 +9,7 @@ public class EnemyAI : MonoBehaviour
     public float health = 3f;
     public float stunDuration = 4f;
     public Transform nextPos;
+    public ItemData[] loot;
 
     [Header("Detection Ranges")]
     public float resetRange;
@@ -22,6 +23,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] bool damageable = true;
 
     [Header("References")]
+    public GameObject itemPrefab;
     PlayerController pc;
     NavMeshAgent agent;
 
@@ -37,6 +39,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (health <= 0f)
         {
+            if (loot.Length > 0f) StartCoroutine(DropItems());
             gameObject.SetActive(false);
             return;
         }
@@ -90,6 +93,18 @@ public class EnemyAI : MonoBehaviour
         else
         {
             state = desiredState;
+        }
+    }
+
+
+    IEnumerator DropItems()
+    {
+        foreach (var item in loot)
+        {
+            var temp = Instantiate(itemPrefab, transform.position, Quaternion.identity);
+            temp.GetComponent<Rigidbody>().AddForce(Vector3.up * 5f);
+            temp.GetComponent<Item>().data = item;
+            yield return new WaitForSeconds(0.25f);
         }
     }
 

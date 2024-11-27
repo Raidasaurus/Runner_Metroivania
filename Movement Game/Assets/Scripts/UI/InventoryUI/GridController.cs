@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
-    private ItemGrid selectedItemGrid;
+    [SerializeField] private ItemGrid selectedItemGrid;
     public ItemGrid SelectedItemGrid { get => selectedItemGrid; set { selectedItemGrid = value; highlight.SetParent(value); } }
 
 
-    InventoryItem selectedItem;
+    [SerializeField] InventoryItem selectedItem;
     InventoryItem overlapItem;
     RectTransform rectT;
 
@@ -18,6 +18,10 @@ public class GridController : MonoBehaviour
     [SerializeField] List<ItemData> items;
     [SerializeField] GameObject itemPrefab;
     [SerializeField] Transform canvasTransform;
+
+    [SerializeField] Transform playerPos;
+    [SerializeField] GameObject itemObjectPrefab;
+    [SerializeField] PlayerManager pm;
 
     InventoryHighlight highlight;
 
@@ -37,6 +41,11 @@ public class GridController : MonoBehaviour
             CreateRandomItem();
         }
 
+        if (Input.GetMouseButtonDown(0))
+        {
+            HandleItem();
+        }
+
         if (selectedItemGrid == null)
         {
             highlight.Show(false);
@@ -44,10 +53,7 @@ public class GridController : MonoBehaviour
         }
         HandleHighlight();
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            HandleItem();
-        }
+
     }
 
     InventoryItem itemToHighlight;
@@ -119,15 +125,26 @@ public class GridController : MonoBehaviour
 
     private void HandleItem()
     {
-        Vector2Int tileGridPos = GetTileGridPosition();
-
-        if (selectedItem == null)
+        if (selectedItem == null && selectedItemGrid != null)
         {
+            Vector2Int tileGridPos = GetTileGridPosition();
             PickUpItem(tileGridPos);
         }
         else
         {
-            PlaceItem(tileGridPos);
+            if (selectedItemGrid != null)
+            {
+                Vector2Int tileGridPos = GetTileGridPosition();
+                PlaceItem(tileGridPos);
+            }
+            else if (!pm.cam.lockCursor && selectedItem != null)
+            {
+                Debug.Log("Test");
+                var temp = Instantiate(itemObjectPrefab, playerPos.position, Quaternion.identity);
+                temp.GetComponent<Rigidbody>().AddForce(Vector3.up * 5f);
+                temp.GetComponent<Item>().data = selectedItem.data;
+                Destroy(selectedItem.gameObject);
+            }
         }
     }
 
