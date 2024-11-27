@@ -139,7 +139,7 @@ public class GridController : MonoBehaviour
             }
             else if (!pm.cam.lockCursor && selectedItem != null)
             {
-                Debug.Log("Test");
+                //Debug.Log("Test");
                 var temp = Instantiate(itemObjectPrefab, playerPos.position, Quaternion.identity);
                 temp.GetComponent<Rigidbody>().AddForce(Vector3.up * 5f);
                 temp.GetComponent<Item>().data = selectedItem.data;
