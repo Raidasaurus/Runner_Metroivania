@@ -8,6 +8,7 @@ public class PlayerManager : MonoBehaviour
     [Header("Conditions")]
     public bool sliding;
     public bool wallrunning;
+    public bool crouching;
     public bool climbing;
     public bool dashing;
     public bool grappling;
@@ -15,6 +16,8 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Speed Values")]
     public float walkSpeed;
+    [Range(0,1)]
+    public float accelFactor;
     [Range(0,1)]
     public float strafeFactor;
     public float airSpeed;

@@ -129,6 +129,7 @@ public class PlayerController : MovementScript
         // Crouch / Sliding start
         if (Input.GetKeyDown(pm.keybind.crouchKey))
         {
+            pm.crouching = true;
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
             rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
 
@@ -141,6 +142,7 @@ public class PlayerController : MovementScript
         // Crouch / Sliding end
         if (Input.GetKeyUp(pm.keybind.crouchKey))
         {
+            pm.crouching = false;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
             if (pm.sliding)
             {
@@ -236,7 +238,7 @@ public class PlayerController : MovementScript
 
     void MovePlayer()
     {
-        moveDir = pm.orientation.forward * vInput + pm.orientation.right * (hInput * pm.strafeFactor);
+        moveDir = pm.orientation.forward * vInput * pm.accelFactor + pm.orientation.right * (hInput * pm.strafeFactor);
 
         if (OnSlope() && !exitingSlope)
         {

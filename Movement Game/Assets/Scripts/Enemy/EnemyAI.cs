@@ -56,10 +56,12 @@ public class EnemyAI : MonoBehaviour
                 patrolling = true;
                 break;            
             case EnemyState.search:
+                agent.isStopped = false;
                 patrolling = false;
                 break;            
             case EnemyState.chase:
                 agent.SetDestination(pc.transform.position);
+                agent.isStopped = false;
                 patrolling = false;
                 break;            
             case EnemyState.attack:
