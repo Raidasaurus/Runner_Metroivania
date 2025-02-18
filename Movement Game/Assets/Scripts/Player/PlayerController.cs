@@ -14,6 +14,7 @@ public class PlayerController : MovementScript
     [Header("Movement Multipliers")]
     public float lerpMultiplier;
     public float airLerpMultiplier;
+    public float gravityFactor;
     public float speedIncreaseMultiplier;
     public float slopeIncreaseMultiplier;
 
@@ -151,7 +152,7 @@ public class PlayerController : MovementScript
         }
 
         // Inventory
-        if (Input.GetKeyDown(pm.keybind.inventoryKey))
+        if (Input.GetKeyDown(pm.keybind.inventoryKey) && grounded)
         {
             pm.cam.lockCursor = !pm.cam.lockCursor;
             pm.aniUI.SetTrigger("Toggle");
@@ -257,11 +258,12 @@ public class PlayerController : MovementScript
             rb.AddForce(moveDir.normalized * moveSpeed * 10f * airMulti, ForceMode.Force);
         }
 
-        if (!pm.wallrunning) rb.useGravity = !OnSlope();
-
+        //if (!pm.wallrunning) rb.useGravity = !OnSlope();
+        /*
         if (hInput > 0 && grounded && pm.cam.lockCursor) pm.cam.DoTilt(-2f);
         else if (hInput < 0 && grounded && pm.cam.lockCursor) pm.cam.DoTilt(2f);
         else pm.cam.DoTilt(0f);
+        */
     }
 
     void SpeedControl()
