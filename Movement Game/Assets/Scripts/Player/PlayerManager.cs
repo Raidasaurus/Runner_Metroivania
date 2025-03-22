@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    [Header("Stats")]
+    public float TotalHP;
+    public float maxHP;
+    public float hp;
+    public float o2;
+    public float hpRegenRate;
 
     [Header("Conditions")]
     public bool sliding;
@@ -32,4 +38,5 @@ public class PlayerManager : MonoBehaviour
     public Transform orientation;
     public Animator aniUI;
     public Keybinds keybind;
+    public Helper helper;
 }

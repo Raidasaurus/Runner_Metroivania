@@ -24,6 +24,7 @@ public class PlayerController : MovementScript
     [Header("Jumping")]
     public float jumpChargeTotal;
     public float jumpCharges;
+    public float jumpO2Cost;
     public float jumpForce;
     public float jumpCooldown;
     public float airMulti;
@@ -84,22 +85,31 @@ public class PlayerController : MovementScript
         readyToJump = true;
         canSlide = true;
         startYScale = transform.localScale.y;
+
+    }
+
+    public void RefillO2()
+    {
+        pm.helper.RegenO2(pm.maxHP, 25f, pm);
     }
 
     private void Update()
     {
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.1f, whatIsGround);
-        if (grounded) jumpCharges = jumpChargeTotal;
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.15f, whatIsGround);
+        
+
 
         GetInput();
         SpeedControl();
         StateHandler();
+        HpStateMachine();
 
         if (pm.grappling)
             rb.drag = 0;
         else
             rb.drag = groundDrag;
 
+        if (grounded) jumpCharges = jumpChargeTotal;
 
         DebugSpeed = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         DebugDesiredMoveSpeed = desiredMoveSpeed;
@@ -110,6 +120,17 @@ public class PlayerController : MovementScript
         MovePlayer();
         if (pm.sliding)
             SlidingMovement();
+    }
+
+    void HpStateMachine()
+    {
+        if (pm.hp > pm.maxHP) pm.hp = pm.maxHP;
+        if (pm.o2 > pm.maxHP) pm.o2 = pm.maxHP;
+
+        if (pm.o2 > 25f && pm.hp < pm.maxHP)
+        {
+            pm.hp += pm.hpRegenRate * Time.deltaTime;
+        }
 
     }
 
@@ -119,11 +140,21 @@ public class PlayerController : MovementScript
         vInput = Input.GetAxisRaw("Vertical");
 
         // Jumping
-        if (Input.GetKeyDown(pm.keybind.jumpKey) && readyToJump && (jumpCharges > 0 || grounded) && !pm.wallrunning)
+        if (Input.GetKeyDown(pm.keybind.jumpKey) && readyToJump && !pm.wallrunning)
         {
-            readyToJump = false;
-            jumpCharges--;
-            Jump();
+            if ((jumpCharges > 0 && pm.o2 > 0) && !grounded)
+            {
+                readyToJump = false;
+                pm.o2 -= jumpO2Cost;
+
+                jumpCharges--;
+                Jump();
+            }
+            else if (grounded)
+            {
+                readyToJump = false;
+                Jump();
+            }
             Invoke(nameof(ResetJump), jumpCooldown);
         }
 
@@ -159,8 +190,6 @@ public class PlayerController : MovementScript
         }
 
     }
-
-
 
     void StateHandler()
     {
@@ -303,7 +332,7 @@ public class PlayerController : MovementScript
 
     public bool OnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.8f))
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.9f))
         {
             if (slopeHit.transform.CompareTag("Player") || slopeHit.transform.CompareTag("Item")) return false;
 
@@ -392,5 +421,11 @@ public class PlayerController : MovementScript
             
         }
     }
+    
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, Vector3.down * (playerHeight * 0.5f + 0.15f));
+    }
 }

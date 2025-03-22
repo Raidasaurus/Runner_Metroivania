@@ -31,45 +31,11 @@ public class Kick : MonoBehaviour
 
     private void Update()
     {
-
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (objHeld && currentObj != null) // Drop held obj
-            {
-                currentObj.GetComponent<Kickable>().Drop();
-                objHeld = false;
-            }
-            else if (!objHeld && currentObj != null) // Throw held obj
-            {
-                currentObj.GetComponent<Kickable>().PickUp(holdPoint);
-                objHeld = true;
-            }
-        }
-
         if (Input.GetKeyDown(pm.keybind.attackKey))
         {
-            if (objHeld)
-            {
-                Throw();
-            }
-            else
-                Attack();
+            Attack();
         }
         if (kickCDTimer > 0) kickCDTimer -= Time.deltaTime;
-    }
-
-    void Throw()
-    {
-        Rigidbody rb = currentObj.GetComponent<Rigidbody>();
-        currentObj.GetComponent<Kickable>().Drop();
-        currentObj = null;
-        objHeld = false;
-        if (rb!= null)
-        {
-            rb.GetComponent<Kickable>().inMotion = true;
-            Vector3 dir = rb.position - transform.position;
-            rb.AddForce(dir.normalized * kickBackForce + Vector3.up * kickUpForce, ForceMode.Impulse);
-        }
     }
 
     void Attack()

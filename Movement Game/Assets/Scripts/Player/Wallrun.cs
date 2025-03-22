@@ -5,6 +5,7 @@ using UnityEngine;
 public class Wallrun : MovementScript
 {
     [Header("Variables")]
+    public float o2Scalar;
     public float wallRunForce;
     public float wallJumpUpForce;
     public float wallJumpSideForce;
@@ -73,13 +74,16 @@ public class Wallrun : MovementScript
         hInput = Input.GetAxisRaw("Horizontal");
         vInput = Input.GetAxisRaw("Vertical");
 
-        if ((wallLeft || wallRight) && vInput > 0 && AboveGround() && !exitingWall)
+        if ((wallLeft || wallRight) && vInput > 0 && AboveGround() && !exitingWall && pm.o2 > 0)
         {
             if (!pm.wallrunning)
                 StartWallRun();
 
             if (wallRunTimer > 0)
+            {
                 wallRunTimer -= Time.deltaTime;
+                pm.o2 -= Time.deltaTime * o2Scalar;
+            }
 
             if (wallRunTimer <= 0 && pm.wallrunning)
             {
