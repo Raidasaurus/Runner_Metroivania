@@ -19,8 +19,9 @@ public class Wallrun : MovementScript
     public float minJumpHeight;
     RaycastHit leftWallHit;
     RaycastHit rightWallHit;
-    bool wallLeft;
-    bool wallRight;
+    [SerializeField] bool aboveGround;
+    [SerializeField] bool wallLeft;
+    [SerializeField] bool wallRight;
 
     [Header("Exit Wall")]
     public float exitWallTime;
@@ -34,13 +35,11 @@ public class Wallrun : MovementScript
     [Header("References")]
     public LayerMask whatIsWall;
     public LayerMask whatIsGround;
-    PlayerController pc;
-    PlayerManager pm;
+    public PlayerManager pm;
     Rigidbody rb;
 
     private void Start()
     {
-        pc = GetComponent<PlayerController>();
         pm = GetComponent<PlayerManager>();
         rb = GetComponent<Rigidbody>();
     }
@@ -64,6 +63,15 @@ public class Wallrun : MovementScript
         wallLeft = Physics.Raycast(transform.position, -pm.orientation.right, out leftWallHit, wallCheckDistance, whatIsWall);
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, pm.orientation.right * wallCheckDistance);
+        Gizmos.DrawRay(transform.position, -pm.orientation.right * wallCheckDistance);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(transform.position, Vector3.down * minJumpHeight);
+    }
+
     bool AboveGround()
     {
         return !Physics.Raycast(transform.position, Vector3.down, minJumpHeight, whatIsGround);
@@ -73,8 +81,8 @@ public class Wallrun : MovementScript
     {
         hInput = Input.GetAxisRaw("Horizontal");
         vInput = Input.GetAxisRaw("Vertical");
-
-        if ((wallLeft || wallRight) && vInput > 0 && AboveGround() && !exitingWall && pm.o2 > 0)
+        aboveGround = AboveGround();
+        if ((wallLeft || wallRight) && vInput > 0 && aboveGround && !exitingWall)
         {
             if (!pm.wallrunning)
                 StartWallRun();
@@ -94,7 +102,6 @@ public class Wallrun : MovementScript
             if (Input.GetKeyDown(pm.keybind.jumpKey))
                 WallJump();
 
-            pc.jumpCharges = pc.jumpChargeTotal;
         }
         else if (exitingWall)
         {

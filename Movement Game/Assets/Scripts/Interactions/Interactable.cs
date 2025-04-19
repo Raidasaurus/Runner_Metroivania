@@ -12,8 +12,8 @@ public abstract class Interactable : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            
 
+            Debug.Log("In");
             // Get reference to playerUI
             PlayerUI ui = other.GetComponent<PlayerUI>();
             if (ui == null) return;
@@ -33,6 +33,7 @@ public abstract class Interactable : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            Debug.Log("Out");
             
 
             // Get reference to player manager

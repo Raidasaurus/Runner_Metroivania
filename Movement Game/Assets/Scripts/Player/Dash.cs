@@ -13,20 +13,22 @@ public class Dash : MovementScript
     Vector3 delayedDashForce;
 
     [Header("References")]
-    PlayerController pc;
     PlayerManager pm;
     Rigidbody rb;
 
     private void Start()
     {
-        pc = GetComponent<PlayerController>();
         pm = GetComponent<PlayerManager>();
         rb = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(pm.keybind.dashKey)) StartDash();
+        if (Input.GetKeyDown(pm.keybind.dashKey)) 
+        { 
+            StartDash(); 
+            Debug.Log("Dash");        
+        }
 
         if (dashCdTimer > 0) dashCdTimer -= Time.deltaTime;
     }
@@ -37,7 +39,7 @@ public class Dash : MovementScript
         else dashCdTimer = dashCD;
 
         pm.dashing = true;
-        Vector3 dir = pm.orientation.forward * Input.GetAxisRaw("Vertical") + pm.orientation.right * Input.GetAxisRaw("Horizontal");
+        Vector3 dir = (pm.orientation.forward * Input.GetAxisRaw("Vertical") + pm.orientation.right * Input.GetAxisRaw("Horizontal")).normalized;
         if (Input.GetAxisRaw("Vertical") == 0 && Input.GetAxisRaw("Horizontal") == 0)
             dir = pm.orientation.forward;
 
@@ -53,7 +55,8 @@ public class Dash : MovementScript
 
     void DelayedDash()
     {
-        rb.AddForce(delayedDashForce, ForceMode.Impulse);
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.AddForce(delayedDashForce, ForceMode.VelocityChange);
     }
 
     void ResetDash()

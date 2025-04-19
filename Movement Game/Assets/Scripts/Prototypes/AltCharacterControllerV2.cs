@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AltCharacterControllerV2 : MonoBehaviour
+public class AltCharacterControllerV2 : MovementScript
 {
     [Header("Debug")]
     public float DebugSpeed;
@@ -19,6 +19,12 @@ public class AltCharacterControllerV2 : MonoBehaviour
     public float jumpForce;
     public float jumpCD;
     public float jumpCheck;
+
+    [Header("Sliding")]
+    public float maxSlideTime;
+    public float slideForce;
+    public float slideCooldown;
+    [SerializeField] float slideTimer;
 
     [Header("Spring")]
     public LayerMask whatIsGround;
@@ -48,6 +54,7 @@ public class AltCharacterControllerV2 : MonoBehaviour
     [Header("Conditions")]
     public bool grounded = true;
     public bool canJump = true;
+    public bool canSlide = true;
     bool canCheckForGround = true;
 
     public enum MovementState
@@ -83,7 +90,7 @@ public class AltCharacterControllerV2 : MonoBehaviour
         
         GetInput();
         StateHandler();
-        //SpeedControl();
+        SpeedControl();
 
         DebugSpeed = rb.velocity.magnitude;
         DebugDesiredMoveSpeed = desiredMoveSpeed;
@@ -93,6 +100,8 @@ public class AltCharacterControllerV2 : MonoBehaviour
     {
         if (grounded) ApplyHoverForce();
         MovePlayer();
+        if (pm.sliding)
+            SlidingMovement();
     }
 
     void GetInput()
@@ -101,14 +110,61 @@ public class AltCharacterControllerV2 : MonoBehaviour
         vInput = Input.GetAxisRaw("Vertical");
         moveDir = (pm.orientation.forward * vInput + pm.orientation.right * hInput).normalized;
 
-        if (Input.GetKeyDown(KeyCode.Space) && canJump) Jump();
+        if (Input.GetKeyDown(KeyCode.Space) && canJump && !pm.wallrunning) // Jumping
+        {
+            Jump();
+        }
+
+        if (Input.GetKeyDown(pm.keybind.crouchKey))
+        {
+            pm.crouching = true;
+            if (moveDir.magnitude > 0f && !pm.sliding && grounded)
+            {
+                StartSlide();
+            }
+        }
+
+        if (Input.GetKeyUp(pm.keybind.crouchKey))
+        {
+            pm.crouching = false;
+            if (pm.sliding)
+            {
+                StopSlide();
+            }
+        }
 
         hoverHeight = Input.GetKey(KeyCode.LeftControl) ? (moveDir.magnitude > 0 ? hoverHeightCrouchMoving : hoverHeightCrouching) : hoverHeightStanding;
+
+        if (Input.GetKeyDown(pm.keybind.inventoryKey) && grounded)
+        {
+            pm.cam.lockCursor = !pm.cam.lockCursor;
+            pm.aniUI.SetTrigger("Toggle");
+        }
     }
     
     void StateHandler()
     {
-        if (moveDir.magnitude > 0f)
+        if (pm.wallrunning) // Wall Running
+        {
+            state = MovementState.wallrun;
+            desiredMoveSpeed = pm.wallRunSpeed;
+        }
+        else if (pm.dashing) // Dash
+        {
+            state = MovementState.dashing;
+            desiredMoveSpeed = pm.dashSpeed;
+        }
+        else if (pm.sliding) // Sliding
+        {
+            state = MovementState.sliding;
+            desiredMoveSpeed = pm.slideSpeed;
+        }
+        else if ( Input.GetKey(pm.keybind.crouchKey) && !pm.sliding) // Crouching
+        {
+            state = MovementState.crouching;
+            desiredMoveSpeed = pm.crouchSpeed;
+        }
+        else if (moveDir.magnitude > 0f) // Walking
         {
             state = MovementState.walking;
             desiredMoveSpeed = pm.walkSpeed;
@@ -123,9 +179,11 @@ public class AltCharacterControllerV2 : MonoBehaviour
 
     void SpeedControl()
     {
+        if (pm.dashing) return;
+
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-        if (flatVel.magnitude > desiredMoveSpeed)
+        if (flatVel.magnitude > desiredMoveSpeed && moveDir.magnitude > 0.1f)
         {
             Vector3 limitedVel = flatVel.normalized * desiredMoveSpeed;
             rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
@@ -151,6 +209,38 @@ public class AltCharacterControllerV2 : MonoBehaviour
         if (moveDir == Vector3.zero && currentVelocity.magnitude > 0.1f)
         {
             rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, Time.fixedDeltaTime * stopLerpSpeed);
+        }
+    }
+
+    void StartSlide()
+    {
+        pm.sliding = true;
+        canSlide = false;
+        slideTimer = maxSlideTime;
+        pm.cam.DoFov(70);
+    }
+
+    void StopSlide()
+    {
+        pm.sliding = false;
+        pm.cam.DoFov(60);
+        Invoke("StartSlideCooldown", slideCooldown);
+    }
+
+    void StartSlideCooldown()
+    {
+        canSlide = false;
+    }
+
+    void SlidingMovement()
+    {
+        Vector3 forceToApply = moveDir * slideForce;
+        rb.AddForce(forceToApply, ForceMode.VelocityChange);
+
+        slideTimer -= Time.deltaTime;
+        if (slideTimer <= 0)
+        {
+            StopSlide();
         }
     }
 
