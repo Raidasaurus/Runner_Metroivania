@@ -1,37 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MovementScript
 {
     [Header("Debug")]
-    public Vector3 DebugSpeed;
+    public float DebugSpeed;
     public float DebugDesiredMoveSpeed;
-    public MovementState state;
+    [SerializeField] MovementState state;
 
-    float moveSpeed;
-
-    [Header("Movement Multipliers")]
+    [Header("Movement")]
     public float lerpMultiplier;
-    public float airLerpMultiplier;
-    public float gravityFactor;
-    public float speedIncreaseMultiplier;
-    public float slopeIncreaseMultiplier;
+    public float accelRate;
+    public float decelRate;
+    public float stopLerpSpeed = 10f;
 
-    float desiredMoveSpeed;
-    float lastDesiredMoveSpeed;
-
-    [Header("Jumping")]
-    public float jumpChargeTotal;
-    public float jumpCharges;
-    public float jumpO2Cost;
+    [Header("Jump")]
     public float jumpForce;
-    public float jumpCooldown;
-    public float airMulti;
-
-    [Header("Scale Values")]
-    public float crouchYScale;
-    float startYScale;
+    public float jumpCD;
+    public float jumpCheck;
 
     [Header("Sliding")]
     public float maxSlideTime;
@@ -39,30 +27,36 @@ public class PlayerController : MovementScript
     public float slideCooldown;
     [SerializeField] float slideTimer;
 
-    [Header("Ground Check")]
-    public float groundDrag;
-    public float playerHeight;
+    [Header("Spring")]
     public LayerMask whatIsGround;
+    public float dampFactor = 1;
+    public float dampFrequency = 15;
+    [SerializeField] float hoverHeight;
+    public float hoverHeightStanding = 1f;
+    public float hoverHeightCrouching = 0.5f;
+    public float hoverHeightCrouchMoving = 0.5f;
+    public float maxDistance = 2;
+    public float castRadius = .5f;
+    RaycastHit hit = new RaycastHit();
 
-    [Header("Slope Handler")]
-    public float maxSlopeAngle;
-    RaycastHit slopeHit;
-    bool exitingSlope;
 
-    [Header("Conditions")]
-    public bool grounded;
-    public bool readyToJump;
-    public bool canSlide;
-    public bool activeGrapple;
+
 
     [Header("References")]
     PlayerManager pm;
     [HideInInspector] public Rigidbody rb;
 
+    float moveSpeed;
+    float desiredMoveSpeed;
     float hInput;
     float vInput;
     Vector3 moveDir;
 
+    [Header("Conditions")]
+    public bool grounded = true;
+    public bool canJump = true;
+    public bool canSlide = true;
+    bool canCheckForGround = true;
 
     public enum MovementState
     {
@@ -81,302 +75,152 @@ public class PlayerController : MovementScript
     {
         pm = GetComponent<PlayerManager>();
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
-        readyToJump = true;
-        canSlide = true;
-        startYScale = transform.localScale.y;
 
+        pm.jump.performed += ctx => Jump();
+        pm.crouch.performed += ctx => Crouch();
+        pm.crouch.canceled += ctx => Stand();
+        pm.openInventory.performed += ctx => OpenInventory();
     }
 
-    public void RefillO2()
-    {
-        pm.helper.RegenO2(pm.maxHP, 25f, pm);
-    }
 
     private void Update()
     {
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.15f, whatIsGround);
+        if (!grounded)
+        {
+            if (Physics.Raycast(transform.position, Vector3.down, hoverHeight - jumpCheck, whatIsGround))
+            {
+                Invoke(nameof(ResetJump), jumpCD);
+                if (canCheckForGround) grounded = true;
+            }
+        }
         
-
-
         GetInput();
-        SpeedControl();
         StateHandler();
-        HpStateMachine();
+        SpeedControl();
 
-        if (pm.grappling)
-            rb.drag = 0;
-        else
-            rb.drag = groundDrag;
-
-        if (grounded) jumpCharges = jumpChargeTotal;
-
-        DebugSpeed = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        DebugSpeed = rb.velocity.magnitude;
         DebugDesiredMoveSpeed = desiredMoveSpeed;
     }
 
     private void FixedUpdate()
     {
+        if (grounded) ApplyHoverForce();
         MovePlayer();
         if (pm.sliding)
             SlidingMovement();
     }
 
-    void HpStateMachine()
-    {
-        if (pm.hp > pm.maxHP) pm.hp = pm.maxHP;
-        if (pm.o2 > pm.maxHP) pm.o2 = pm.maxHP;
-
-        if (pm.o2 > 25f && pm.hp < pm.maxHP)
-        {
-            pm.hp += pm.hpRegenRate * Time.deltaTime;
-        }
-
-    }
-
     void GetInput()
     {
-        hInput = Input.GetAxisRaw("Horizontal");
-        vInput = Input.GetAxisRaw("Vertical");
+        Vector2 input = pm.move.ReadValue<Vector2>();
+        moveDir = (pm.orientation.forward * input.y + pm.orientation.right * input.x).normalized;
 
-        // Jumping
-        if (Input.GetKeyDown(pm.keybind.jumpKey) && readyToJump && !pm.wallrunning)
-        {
-            if ((jumpCharges > 0 && pm.o2 > 0) && !grounded)
-            {
-                readyToJump = false;
-                pm.o2 -= jumpO2Cost;
+        hoverHeight = (pm.crouching || pm.sliding) ? (moveDir.magnitude > 0 ? hoverHeightCrouchMoving : hoverHeightCrouching) : hoverHeightStanding;
 
-                jumpCharges--;
-                Jump();
-            }
-            else if (grounded)
-            {
-                readyToJump = false;
-                Jump();
-            }
-            Invoke(nameof(ResetJump), jumpCooldown);
-        }
-
-        // Crouch / Sliding start
-        if (Input.GetKeyDown(pm.keybind.crouchKey))
-        {
-            pm.crouching = true;
-            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
-
-            if (moveDir.magnitude > 0f && !pm.sliding && grounded && canSlide)
-            {
-                StartSlide();
-            }
-        }
-
-        // Crouch / Sliding end
-        if (Input.GetKeyUp(pm.keybind.crouchKey))
-        {
-            pm.crouching = false;
-            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
-            if (pm.sliding)
-            {
-                StopSlide();
-            }
-        }
-
-        // Inventory
+        
+        // update this 
+        /*
         if (Input.GetKeyDown(pm.keybind.inventoryKey) && grounded)
         {
             pm.cam.lockCursor = !pm.cam.lockCursor;
             pm.aniUI.SetTrigger("Toggle");
         }
-
+        */
     }
 
+    void OpenInventory()
+    {
+        pm.cam.lockCursor = !pm.cam.lockCursor;
+        pm.aniUI.SetTrigger("Toggle");
+    }
+
+    void Crouch()
+    {
+        pm.crouching = true;
+        if (moveDir.magnitude > 0f && !pm.sliding && grounded)
+        {
+            StartSlide();
+        }
+    }
+
+    void Stand()
+    {
+        pm.crouching = false;
+        if (pm.sliding)
+        {
+            StopSlide();
+        }
+    }
+    
     void StateHandler()
     {
-        if (pm.freeze)
-        {
-            state = MovementState.freeze;
-            rb.velocity *= 0.98f;
-        }
-        else if (pm.climbing) // Climbing
-        {
-            state = MovementState.climbing;
-            desiredMoveSpeed = pm.wallRunSpeed;
-        }
-        else if (pm.dashing) // Dashing
-        {
-            state = MovementState.dashing;
-            desiredMoveSpeed = pm.dashSpeed;
-            activeGrapple = false;
-            pm.freeze = false;
-            pm.grappling = false;
-        }
-        else if (pm.wallrunning) // Wallrunning
+        if (pm.wallrunning) // Wall Running
         {
             state = MovementState.wallrun;
             desiredMoveSpeed = pm.wallRunSpeed;
-            StopAllCoroutines();
+        }
+        else if (pm.dashing) // Dash
+        {
+            state = MovementState.dashing;
+            desiredMoveSpeed = pm.dashSpeed;
         }
         else if (pm.sliding) // Sliding
         {
             state = MovementState.sliding;
-
-            if (OnSlope() && rb.velocity.y < 0.1f)
-                desiredMoveSpeed = pm.slideSpeed + 15f;
-            else
-                desiredMoveSpeed = pm.slideSpeed;
-
+            desiredMoveSpeed = pm.slideSpeed;
         }
-        else if (Input.GetKey(pm.keybind.crouchKey) && !pm.sliding && grounded) // Crouching
+        else if (pm.crouching && !pm.sliding) // Crouching
         {
             state = MovementState.crouching;
             desiredMoveSpeed = pm.crouchSpeed;
         }
-        else if (grounded && !pm.sliding && moveDir.magnitude > 0) // Walking
+        else if (moveDir.magnitude > 0f) // Walking
         {
-
             state = MovementState.walking;
             desiredMoveSpeed = pm.walkSpeed;
-            StopAllCoroutines();
-            //ani.CrossFade(Moving, 0, 0);
-        }
-        else if (!grounded) // Jumping
-        {
-            state = MovementState.air;
-            desiredMoveSpeed = lastDesiredMoveSpeed;
-            StopAllCoroutines();
-        }
-        else // Idle
-        {
-            state = MovementState.idle;
-            desiredMoveSpeed = pm.airSpeed;
-        }
-                
-
-        if ((desiredMoveSpeed < moveSpeed) && (moveSpeed != 0f) && desiredMoveSpeed != lastDesiredMoveSpeed && !activeGrapple)
-        {
-            StopAllCoroutines();
-            StartCoroutine(SmoothLerpMovement());
         }
         else
         {
-            moveSpeed = desiredMoveSpeed;
+            state = MovementState.idle;
+            desiredMoveSpeed = 0f;
         }
 
-        lastDesiredMoveSpeed = desiredMoveSpeed;
-    }
-
-    void MovePlayer()
-    {
-        moveDir = pm.orientation.forward * vInput * pm.accelFactor + pm.orientation.right * (hInput * pm.strafeFactor);
-
-        if (OnSlope() && !exitingSlope)
-        {
-            rb.AddForce(GetSlopeMoveDir(moveDir) * moveSpeed * 20f, ForceMode.Force);
-            if (rb.velocity.y > 0)
-            {
-                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
-            }
-        }
-        else if (grounded)
-        {
-            rb.AddForce(moveDir * moveSpeed * 10f, ForceMode.Force);
-        }
-        else if (!grounded)
-        {
-            rb.AddForce(moveDir.normalized * moveSpeed * 10f * airMulti, ForceMode.Force);
-        }
-
-        //if (!pm.wallrunning) rb.useGravity = !OnSlope();
-        /*
-        if (hInput > 0 && grounded && pm.cam.lockCursor) pm.cam.DoTilt(-2f);
-        else if (hInput < 0 && grounded && pm.cam.lockCursor) pm.cam.DoTilt(2f);
-        else pm.cam.DoTilt(0f);
-        */
     }
 
     void SpeedControl()
     {
-        if (activeGrapple) return;
+        if (pm.dashing) return;
 
-        if (OnSlope() && !exitingSlope)
-        {
-            if (rb.velocity.magnitude > moveSpeed)
-                rb.velocity = rb.velocity.normalized * moveSpeed;
-        }
-        else
-        {
-            Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-            if (flatVel.magnitude > moveSpeed)
-            {
-                Vector3 limitedVel = flatVel.normalized * moveSpeed;
-                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
-            }
+        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+        if (flatVel.magnitude > desiredMoveSpeed && moveDir.magnitude > 0.1f)
+        {
+            Vector3 limitedVel = flatVel.normalized * desiredMoveSpeed;
+            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
     }
 
-    void Jump()
-    {
-        exitingSlope = true;
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+    void MovePlayer()
+    { 
 
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-    }
+        Vector3 currentVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        Vector3 targetVelocity = moveDir * desiredMoveSpeed;
 
-    void ResetJump()
-    {
-        readyToJump = true;
-        exitingSlope = false;
-    }
+        float acceleration = (moveDir != Vector3.zero) ? accelRate : decelRate;
 
-    public bool OnSlope()
-    {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.9f))
+        // **Use physics-based acceleration**
+        Vector3 newVelocity = Vector3.MoveTowards(currentVelocity, targetVelocity, acceleration * Time.fixedDeltaTime);
+
+        // Apply force for acceleration
+        Vector3 force = (newVelocity - currentVelocity) * rb.mass / Time.fixedDeltaTime;
+        rb.AddForce(force, ForceMode.Force);
+
+        // **Snappy stopping using Lerp**
+        if (moveDir == Vector3.zero && currentVelocity.magnitude > 0.1f)
         {
-            if (slopeHit.transform.CompareTag("Player") || slopeHit.transform.CompareTag("Item")) return false;
-
-            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return angle < maxSlopeAngle && angle != 0;
+            rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, Time.fixedDeltaTime * stopLerpSpeed);
         }
-
-        return false;
-    }
-
-    public Vector3 GetSlopeMoveDir(Vector3 dir)
-    {
-        return Vector3.ProjectOnPlane(dir, slopeHit.normal).normalized;
-    }
-
-    IEnumerator SmoothLerpMovement()
-    {
-        float time = 0;
-        float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
-        float startValue = moveSpeed;
-        float multi;
-
-        while (time < difference)
-        {
-            if (!grounded)
-                multi = airLerpMultiplier;
-            else
-                multi = lerpMultiplier;
-
-            moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, (time / difference) * multi);
-            
-            if (OnSlope())
-            {
-                float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
-                float slopeAngleIncrease = 1 + (slopeAngle / 90f);
-
-                time += Time.deltaTime * speedIncreaseMultiplier * slopeIncreaseMultiplier * slopeAngleIncrease;
-            }
-            else
-                time += Time.deltaTime * speedIncreaseMultiplier;
-            yield return null;
-        }
-        moveSpeed = desiredMoveSpeed;
-        
     }
 
     void StartSlide()
@@ -396,36 +240,111 @@ public class PlayerController : MovementScript
 
     void StartSlideCooldown()
     {
-        canSlide = true;
+        canSlide = false;
     }
 
     void SlidingMovement()
     {
-        Vector3 inputDir = pm.orientation.forward * vInput + pm.orientation.right * hInput;
+        Vector3 forceToApply = moveDir * slideForce;
+        rb.AddForce(forceToApply, ForceMode.VelocityChange);
 
-        if (!OnSlope() || rb.velocity.y > -0.1f)
-        {
-            rb.AddForce(inputDir.normalized * slideForce, ForceMode.Force);
-            slideTimer -= Time.deltaTime;
-            if (!grounded)
-                slideTimer = maxSlideTime;
-        }
-        else
-        {
-            rb.AddForce(GetSlopeMoveDir(inputDir) * slideForce, ForceMode.Force);
-        }
-
+        slideTimer -= Time.deltaTime;
         if (slideTimer <= 0)
         {
             StopSlide();
-            
         }
     }
-    
+
+    void Jump()
+    {
+        if (!canJump || pm.wallrunning) return;
+
+        canJump = false;
+        grounded = false;
+        canCheckForGround = false;
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        Invoke(nameof(ResetGroundCheck), 0.1f);
+    }
+
+    void ResetJump()
+    {
+        canJump = true;
+    }
+
+    void ResetGroundCheck()
+    {
+        canCheckForGround = true;
+    }
+
+    void ApplyHoverForce()
+    {
+        if (Physics.SphereCast(transform.position, castRadius, Vector3.down, out hit, hoverHeight, whatIsGround))
+        {
+            Vector3 rayDirection = Vector3.down;
+            float springDelta = GetSpringDelta(hit);
+            float springStrength = SpringStrength(rb.mass, dampFrequency);
+            float dampStrength = DampStrength(dampFactor, rb.mass, dampFrequency);
+            float springSpeed = GetRelativeSpeedAlongDirection(rb, hit.rigidbody, rayDirection);
+            Vector3 springForce = GetSpringForce(
+                springDelta,
+                springSpeed,
+                springStrength,
+                dampStrength,
+                rayDirection);
+            springForce -= Physics.gravity;
+            rb.AddForce(springForce);
+            if (hit.rigidbody) hit.rigidbody.AddForceAtPosition(-springForce, hit.point);
+        }
+    }
+
+
+    float GetSpringDelta(RaycastHit hit)
+    {
+        return hit.distance - (hoverHeight - castRadius);
+    }
+
+    static float GetRelativeSpeedAlongDirection(
+        Rigidbody targetBody,
+        Rigidbody frameBody,
+        Vector3 direction)
+    {
+        Vector3 velocity = targetBody.velocity;
+        Vector3 hitBodyVelocity = frameBody ? frameBody.velocity : default;
+        float rayDirectionSpeed = Vector3.Dot(direction, velocity);
+        float hitBodyRayDirectionSpeed = Vector3.Dot(direction, hitBodyVelocity);
+        return rayDirectionSpeed - hitBodyRayDirectionSpeed;
+    }
+
+    static float SpringStrength(float mass, float frequency)
+    {
+        return frequency * frequency * mass;
+    }
+
+    static float DampStrength(float dampFactor, float mass, float frequency)
+    {
+        float criticalDampStrength = 2 * mass * frequency;
+        return dampFactor * criticalDampStrength;
+    }
+
+    static Vector3 GetSpringForce(
+        float springDelta,
+        float springSpeed,
+        float springStrength,
+        float dampStrength,
+        Vector3 direction)
+    {
+        float tension = springDelta * springStrength;
+        float damp = springSpeed * dampStrength;
+        float forceMagnitude = tension - damp;
+        Vector3 force = direction * forceMagnitude;
+        return force;
+    }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, Vector3.down * (playerHeight * 0.5f + 0.15f));
+        Gizmos.DrawRay(transform.position, Vector3.down * (hoverHeight - jumpCheck));
+        Gizmos.DrawSphere(transform.position + Vector3.down * (hoverHeight), castRadius);
     }
 }

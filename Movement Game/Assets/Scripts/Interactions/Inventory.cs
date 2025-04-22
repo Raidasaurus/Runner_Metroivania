@@ -21,16 +21,21 @@ public class Inventory : MonoBehaviour
         pm = GetComponent<PlayerManager>();
         ui = GetComponent<PlayerUI>();
         gc = FindObjectOfType<GridController>();
+
+        pm.interact.performed += ctx => Interact();
     }
     private void Update()
     {
-        currentInteractable = CheckForClosestInteractable();
+        currentInteractable = CheckForClosestInteractable();    
+    }
 
-        if (Input.GetKeyDown(pm.keybind.interactKey) && currentInteractable != null)
+    void Interact()
+    {
+        if (currentInteractable != null)
         {
             if (currentInteractable is Item)
             {
-                if(gc.AddItem((Item)currentInteractable))
+                if (gc.AddItem((Item)currentInteractable))
                 {
                     items.Add((Item)currentInteractable);
                     if (pm.inventory.interactables.Contains(currentInteractable))

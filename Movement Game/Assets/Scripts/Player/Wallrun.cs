@@ -42,6 +42,7 @@ public class Wallrun : MovementScript
     {
         pm = GetComponent<PlayerManager>();
         rb = GetComponent<Rigidbody>();
+        pm.jump.performed += ctx => WallJump();
     }
 
     private void Update()
@@ -98,10 +99,6 @@ public class Wallrun : MovementScript
                 exitingWall = true;
                 exitWallTimer = exitWallTime;
             }
-
-            if (Input.GetKeyDown(pm.keybind.jumpKey))
-                WallJump();
-
         }
         else if (exitingWall)
         {
@@ -160,15 +157,18 @@ public class Wallrun : MovementScript
 
     void WallJump()
     {
-        exitingWall = true;
-        exitWallTimer = exitWallTime;
+        if ((wallLeft || wallRight) && vInput > 0 && aboveGround && !exitingWall)
+        {
+            exitingWall = true;
+            exitWallTimer = exitWallTime;
 
-        Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
-        Vector3 forceToApply = transform.up * wallJumpUpForce + wallNormal * wallJumpSideForce;
+            Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
+            Vector3 forceToApply = transform.up * wallJumpUpForce + wallNormal * wallJumpSideForce;
 
 
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        rb.AddForce(forceToApply, ForceMode.Impulse);
-        pm.cam.DoTilt(0f);
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            rb.AddForce(forceToApply, ForceMode.Impulse);
+            pm.cam.DoTilt(0f);
+        }
     }
 }

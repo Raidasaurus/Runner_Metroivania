@@ -20,16 +20,12 @@ public class Dash : MovementScript
     {
         pm = GetComponent<PlayerManager>();
         rb = GetComponent<Rigidbody>();
+
+        pm.dash.performed += ctx => StartDash();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(pm.keybind.dashKey)) 
-        { 
-            StartDash(); 
-            Debug.Log("Dash");        
-        }
-
         if (dashCdTimer > 0) dashCdTimer -= Time.deltaTime;
     }
 

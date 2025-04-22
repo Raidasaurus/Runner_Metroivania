@@ -68,6 +68,9 @@ public class Climbing : MovementScript
 
     void StateMachine()
     {
+        
+        // update this 
+        /*
         if (wallFront && Input.GetKey(KeyCode.W) && Input.GetKey(pm.keybind.jumpKey) && wallLookAngle < maxWallLookAngle)
         {
             if (!pm.climbing && climbTimer > 0)
@@ -80,5 +83,6 @@ public class Climbing : MovementScript
         {
             if (pm.climbing) StopClimbing();
         }
+        */
     }
 }

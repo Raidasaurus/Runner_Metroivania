@@ -31,10 +31,7 @@ public class Kick : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(pm.keybind.attackKey))
-        {
-            Attack();
-        }
+
         if (kickCDTimer > 0) kickCDTimer -= Time.deltaTime;
     }
 

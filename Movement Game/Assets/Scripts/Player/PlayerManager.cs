@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -37,6 +38,63 @@ public class PlayerManager : MonoBehaviour
     public Inventory inventory;
     public Transform orientation;
     public Animator aniUI;
-    public Keybinds keybind;
     public Helper helper;
+
+    [Header("Inputs")]
+    public InputAction move;
+    public InputAction attack;
+    public InputAction jump;
+    public InputAction crouch;
+    public InputAction openInventory;
+    public InputAction interact;
+    public InputAction dash;
+    public InputAction sprint;
+    
+    [HideInInspector] public PlayerControls playerControls;
+
+
+
+    private void Awake()
+    {
+        playerControls = new PlayerControls();
+    }
+
+    private void OnEnable()
+    {
+        move = playerControls.Player.Move;
+        move.Enable();
+
+        attack = playerControls.Player.Fire;
+        attack.Enable();
+
+        jump = playerControls.Player.Jump;
+        jump.Enable();
+
+        crouch = playerControls.Player.Crouch;
+        crouch.Enable();
+
+        openInventory = playerControls.Player.OpenInventory;
+        openInventory.Enable();
+
+        interact = playerControls.Player.Interact;
+        interact.Enable();
+
+        dash = playerControls.Player.Dash;
+        dash.Enable();
+
+        sprint = playerControls.Player.Sprint;
+        sprint.Enable();
+    }
+
+    private void OnDisable()
+    {
+        move.Disable();
+        attack.Disable();
+        jump.Disable();
+        crouch.Disable();
+        openInventory.Disable();
+        interact.Disable();
+        dash.Disable();
+        sprint.Disable();
+    }
 }

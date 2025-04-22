@@ -34201,7 +34201,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dashForce: 50
   dashUpwardForce: 0
-  dashDuration: 0.25
+  dashDuration: 0.1
   dashCD: 0.5
 --- !u!114 &1510830300
 MonoBehaviour:
@@ -49771,8 +49771,79 @@ MonoBehaviour:
   inventory: {fileID: 1510830301}
   orientation: {fileID: 2044908678218856495}
   aniUI: {fileID: 1753003836}
-  keybind: {fileID: 11400000, guid: fd3aab29f7eee3f42a54b24439485f26, type: 2}
   helper: {fileID: 1510830295}
+  move:
+    m_Name: Move
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 16349650-1d72-4023-811c-ae99a7411526
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  attack:
+    m_Name: Attack
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: f03cd178-ad30-45fc-b994-54d921f8f86d
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  jump:
+    m_Name: Jump
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: bcfa36ba-18a6-4b2c-a138-e32664f8ebe2
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  crouch:
+    m_Name: Crouch
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 03813023-9f50-42f0-a203-e939ea63d572
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  openInventory:
+    m_Name: Open Inventory
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: b19f704a-b3e9-45ca-822f-715a6c019ea5
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  interact:
+    m_Name: Interact
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 3bfeeae9-eb66-46f6-bd05-340b39310619
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  dash:
+    m_Name: Dash
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 0bb44fa6-4e65-45fd-8937-09e084e71fcf
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  sprint:
+    m_Name: Sprint
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 85a0605d-3ec0-4dfa-8d62-f830782da075
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!4 &672801501117283791
 Transform:
   m_ObjectHideFlags: 0
@@ -49904,8 +49975,79 @@ MonoBehaviour:
   inventory: {fileID: 6008799351164433669}
   orientation: {fileID: 1679312586925875850}
   aniUI: {fileID: 1753003836}
-  keybind: {fileID: 11400000, guid: fd3aab29f7eee3f42a54b24439485f26, type: 2}
   helper: {fileID: 7940946355151531204}
+  move:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 0887b482-8a1d-4b24-8e1f-32a1b08f3846
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  attack:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: ca0bde51-2633-4103-a094-ac1900d93c6e
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  jump:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 8a43dd48-c730-4db0-8b39-434a976a02a1
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  crouch:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: fe33ea3f-8c91-42af-b055-b7951641b4a6
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  openInventory:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 7e04a19e-41d9-45bf-a54f-6f482d0c9fa0
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  interact:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: b633c0c2-6419-40e8-b626-e8043dc60acb
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  dash:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 36c8af76-5258-4cc9-a5c7-66048fd92755
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  sprint:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 0a1a042c-450d-4f3d-b932-81fdfdfc9748
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!4 &951651176482914798
 Transform:
   m_ObjectHideFlags: 0
@@ -50282,9 +50424,10 @@ GameObject:
   - component: {fileID: 1510830300}
   - component: {fileID: 1510830295}
   - component: {fileID: 665861119725781298}
-  - component: {fileID: 2588618349173109628}
+  - component: {fileID: 8863374570340422191}
   - component: {fileID: 1510830294}
   - component: {fileID: 1510830299}
+  - component: {fileID: 8863374570340422190}
   m_Layer: 0
   m_Name: Player (1)
   m_TagString: Player
@@ -50976,47 +51119,6 @@ Transform:
   - {fileID: 7201565994453651605}
   m_Father: {fileID: 1774970401111220221}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2588618349173109628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568199453948900828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ba34f4aa247c52408e26c1bd12bfce8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DebugSpeed: 0
-  DebugDesiredMoveSpeed: 0
-  state: 8
-  lerpMultiplier: 45
-  accelRate: 35
-  decelRate: 15
-  stopLerpSpeed: 4
-  jumpForce: 15
-  jumpCD: 0.001
-  jumpCheck: 0.1
-  maxSlideTime: 0.5
-  slideForce: 0.5
-  slideCooldown: 0.1
-  slideTimer: 0
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 520
-  dampFactor: 1
-  dampFrequency: 27
-  hoverHeight: 1.2
-  hoverHeightStanding: 1.2
-  hoverHeightCrouching: 0.5
-  hoverHeightCrouchMoving: 0.75
-  maxDistance: 2
-  castRadius: 0.35
-  rb: {fileID: 7224411331027763447}
-  grounded: 1
-  canJump: 1
-  canSlide: 1
 --- !u!1 &2617627266245231164
 GameObject:
   m_ObjectHideFlags: 0
@@ -51561,11 +51663,14 @@ MonoBehaviour:
   DebugSpeed: {x: 0, y: 0, z: 0}
   DebugDesiredMoveSpeed: 0
   state: 0
+  moveSpeed: 0
   lerpMultiplier: 45
   airLerpMultiplier: 1
   gravityFactor: 0
   speedIncreaseMultiplier: 1.5
   slopeIncreaseMultiplier: 2.5
+  desiredMoveSpeed: 0
+  lastDesiredMoveSpeed: 0
   jumpChargeTotal: 1
   jumpCharges: 0
   jumpO2Cost: 5
@@ -51573,6 +51678,7 @@ MonoBehaviour:
   jumpCooldown: 0.1
   airMulti: 0.2
   crouchYScale: 0.5
+  startYScale: 0
   maxSlideTime: 0.5
   slideForce: 0.5
   slideCooldown: 0.1
@@ -51580,14 +51686,18 @@ MonoBehaviour:
   groundDrag: 1
   playerHeight: 2
   whatIsGround:
-    serializedVersion: 2
     m_Bits: 584
   maxSlopeAngle: 45
+  exitingSlope: 0
   grounded: 1
   readyToJump: 1
   canSlide: 0
   activeGrapple: 0
+  pm: {fileID: 0}
   rb: {fileID: 0}
+  hInput: 0
+  vInput: 0
+  moveDir: {x: 0, y: 0, z: 0}
 --- !u!1 &3315200968969632244
 GameObject:
   m_ObjectHideFlags: 0
@@ -55257,6 +55367,59 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8863374570340422190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1568199453948900828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6273ebb2f33b4004295380479a782a54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8863374570340422191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1568199453948900828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ba34f4aa247c52408e26c1bd12bfce8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DebugSpeed: 0
+  DebugDesiredMoveSpeed: 0
+  state: 8
+  lerpMultiplier: 45
+  accelRate: 35
+  decelRate: 15
+  stopLerpSpeed: 4
+  jumpForce: 15
+  jumpCD: 0.001
+  jumpCheck: 0.1
+  maxSlideTime: 0.5
+  slideForce: 0.5
+  slideCooldown: 0.1
+  slideTimer: 0
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 520
+  dampFactor: 1
+  dampFrequency: 27
+  hoverHeight: 1.2
+  hoverHeightStanding: 1.2
+  hoverHeightCrouching: 0.5
+  hoverHeightCrouchMoving: 0.75
+  maxDistance: 2
+  castRadius: 0.35
+  rb: {fileID: 7224411331027763447}
+  grounded: 1
+  canJump: 1
+  canSlide: 1
 --- !u!4 &8896554204580985862
 Transform:
   m_ObjectHideFlags: 0

@@ -46,6 +46,9 @@ public class Grapple : MovementScript
 
     private void Update()
     {
+        
+        // update this 
+        /*
         if (Input.GetKeyDown(pm.keybind.grappleKey))
         {
             ResetGrappleAnimation();
@@ -54,11 +57,12 @@ public class Grapple : MovementScript
 
         if (Input.GetKeyDown(pm.keybind.jumpKey)) StopGrapple();
         if (grappleCDTimer > 0) grappleCDTimer -= Time.deltaTime;
+        */
     }
 
     void JumpToPosition(Vector3 targetPos, float t)
     {
-        pc.activeGrapple = true;
+        //pc.activeGrapple = true;
         velocityToSet = CalculateJumpVelocity(transform.position, targetPos, t);
         Invoke(nameof(SetVelocity), 0.1f);
 
@@ -75,7 +79,7 @@ public class Grapple : MovementScript
 
     void ResetRestrictions()
     {
-        pc.activeGrapple = false;
+        //pc.activeGrapple = false;
     }
 
     public void GrappleCollide()
