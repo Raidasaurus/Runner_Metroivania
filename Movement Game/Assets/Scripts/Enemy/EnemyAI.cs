@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : Hitable
 {
     [Header("Variables")]
     public float health = 3f;
@@ -20,7 +20,7 @@ public class EnemyAI : MonoBehaviour
     public EnemyState desiredState;
     [SerializeField] EnemyState state;
     public bool patrolling;
-    [SerializeField] bool damageable = true;
+    
 
     [Header("References")]
     public GameObject itemPrefab;
@@ -120,20 +120,12 @@ public class EnemyAI : MonoBehaviour
         stunned
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public override void TakeDamage()
     {
-        if (collision.gameObject.CompareTag("Kickable"))
-        {
-            if (collision.gameObject.GetComponent<Kickable>().inMotion)
-            {
-                if (damageable) StartCoroutine(TakeDamage());
-            }
-        }
+        if(damageable) StartCoroutine(ApplyDamage());
     }
 
-
-
-    IEnumerator TakeDamage()
+    IEnumerator ApplyDamage()
     {
         damageable = false;
         state = EnemyState.stunned;

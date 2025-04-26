@@ -3921,7 +3921,6 @@ GameObject:
   - component: {fileID: 126414234}
   - component: {fileID: 126414233}
   - component: {fileID: 126414232}
-  - component: {fileID: 126414231}
   - component: {fileID: 126414236}
   m_Layer: 8
   m_Name: Kickable (3)
@@ -3945,20 +3944,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1761543236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &126414231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 126414229}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15f4893ca43775c4a9316e9c2e0973fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parent: {fileID: 1761543236}
-  inMotion: 0
 --- !u!54 &126414232
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14110,8 +14095,8 @@ GameObject:
   - component: {fileID: 596857944}
   - component: {fileID: 596857943}
   - component: {fileID: 596857942}
-  - component: {fileID: 596857946}
   - component: {fileID: 596857947}
+  - component: {fileID: 596857948}
   m_Layer: 8
   m_Name: Kickable (1)
   m_TagString: Kickable
@@ -14142,7 +14127,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 596857940}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -14232,20 +14217,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 596857940}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &596857946
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 596857940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15f4893ca43775c4a9316e9c2e0973fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parent: {fileID: 1463524096}
-  inMotion: 0
 --- !u!135 &596857947
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -14267,6 +14238,20 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &596857948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 596857940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47ee6cfd0f3ec74b87b66c08cb0aee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageable: 0
+  knockback: 1
 --- !u!1001 &608273023
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29836,6 +29821,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75944e2c00815734b9aaf943024fde30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageable: 1
+  knockback: 1
   health: 0
   stunDuration: 0
   nextPos: {fileID: 0}
@@ -29846,7 +29833,6 @@ MonoBehaviour:
   desiredState: 0
   state: 0
   patrolling: 0
-  damageable: 1
   itemPrefab: {fileID: 0}
 --- !u!1 &1411538171
 GameObject:
@@ -43430,7 +43416,6 @@ GameObject:
   - component: {fileID: 1907520247}
   - component: {fileID: 1907520246}
   - component: {fileID: 1907520245}
-  - component: {fileID: 1907520244}
   - component: {fileID: 1907520243}
   m_Layer: 8
   m_Name: Kickable (3)
@@ -43475,20 +43460,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1907520244
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1907520241}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15f4893ca43775c4a9316e9c2e0973fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parent: {fileID: 1761543236}
-  inMotion: 0
 --- !u!54 &1907520245
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -46955,8 +46926,8 @@ GameObject:
   - component: {fileID: 2002507987}
   - component: {fileID: 2002507986}
   - component: {fileID: 2002507985}
-  - component: {fileID: 2002507989}
   - component: {fileID: 2002507990}
+  - component: {fileID: 2002507991}
   m_Layer: 8
   m_Name: Kickable (2)
   m_TagString: Kickable
@@ -46987,7 +46958,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2002507983}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -47077,20 +47048,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2002507983}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &2002507989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2002507983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15f4893ca43775c4a9316e9c2e0973fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parent: {fileID: 1463524096}
-  inMotion: 0
 --- !u!135 &2002507990
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -47112,6 +47069,20 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2002507991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2002507983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47ee6cfd0f3ec74b87b66c08cb0aee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageable: 0
+  knockback: 1
 --- !u!43 &2003987066
 Mesh:
   m_ObjectHideFlags: 0
@@ -47907,7 +47878,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2073709584
 Transform:
   m_ObjectHideFlags: 0
@@ -48057,6 +48028,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75944e2c00815734b9aaf943024fde30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageable: 1
+  knockback: 1
   health: 3
   stunDuration: 2
   nextPos: {fileID: 507378999}
@@ -48068,7 +48041,6 @@ MonoBehaviour:
   desiredState: 1
   state: 0
   patrolling: 0
-  damageable: 1
   itemPrefab: {fileID: 729519483406103776, guid: 0857be609cfc2264496d137c78be103a, type: 3}
 --- !u!43 &2086441633
 Mesh:
@@ -51660,44 +51632,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99934fc1b54be724caa294ed3a1953be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DebugSpeed: {x: 0, y: 0, z: 0}
-  DebugDesiredMoveSpeed: 0
-  state: 0
-  moveSpeed: 0
-  lerpMultiplier: 45
-  airLerpMultiplier: 1
-  gravityFactor: 0
-  speedIncreaseMultiplier: 1.5
-  slopeIncreaseMultiplier: 2.5
-  desiredMoveSpeed: 0
-  lastDesiredMoveSpeed: 0
-  jumpChargeTotal: 1
-  jumpCharges: 0
-  jumpO2Cost: 5
-  jumpForce: 15
-  jumpCooldown: 0.1
-  airMulti: 0.2
-  crouchYScale: 0.5
-  startYScale: 0
-  maxSlideTime: 0.5
-  slideForce: 0.5
-  slideCooldown: 0.1
-  slideTimer: 0
-  groundDrag: 1
-  playerHeight: 2
-  whatIsGround:
-    m_Bits: 584
-  maxSlopeAngle: 45
-  exitingSlope: 0
-  grounded: 1
-  readyToJump: 1
-  canSlide: 0
-  activeGrapple: 0
-  pm: {fileID: 0}
-  rb: {fileID: 0}
-  hInput: 0
-  vInput: 0
-  moveDir: {x: 0, y: 0, z: 0}
 --- !u!1 &3315200968969632244
 GameObject:
   m_ObjectHideFlags: 0
@@ -53818,8 +53752,8 @@ GameObject:
   - component: {fileID: 6711771979196226784}
   - component: {fileID: 6711771979196226786}
   - component: {fileID: 6711771979196226785}
-  - component: {fileID: 6711771979196226787}
   - component: {fileID: 6711771979196226788}
+  - component: {fileID: 6711771979196226789}
   m_Layer: 8
   m_Name: Kickable
   m_TagString: Kickable
@@ -54059,7 +53993,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6438321841794321444}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -54099,20 +54033,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6711771979196226787
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6438321841794321444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15f4893ca43775c4a9316e9c2e0973fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parent: {fileID: 1463524096}
-  inMotion: 0
 --- !u!135 &6711771979196226788
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -54134,6 +54054,20 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6711771979196226789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438321841794321444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47ee6cfd0f3ec74b87b66c08cb0aee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageable: 0
+  knockback: 1
 --- !u!1 &6720857741550801197
 GameObject:
   m_ObjectHideFlags: 0
@@ -54679,13 +54613,16 @@ MonoBehaviour:
   kickCD: 1
   kickSize: 1.75
   hitLayers:
-    serializedVersion: 2
     m_Bits: 384
   objHeld: 0
   currentObj: {fileID: 0}
+  kickCDTimer: 0
+  startYScale: 0
   kickPoint: {fileID: 1291514535}
   holdPoint: {fileID: 399999344}
   debug: 0
+  pc: {fileID: 0}
+  pm: {fileID: 0}
 --- !u!136 &7940946355151531203
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -55379,6 +55316,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6273ebb2f33b4004295380479a782a54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  charge: 0
+  chargeMax: 1
+  hitRadius: 1
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 384
+  lightForce: 10
+  heavyForce: 25
+  kickUpForce: 1
+  hitPos: {fileID: 1770932235}
 --- !u!114 &8863374570340422191
 MonoBehaviour:
   m_ObjectHideFlags: 0
