@@ -98,7 +98,7 @@ public class PlayerController : MovementScript
         StateHandler();
         SpeedControl();
 
-        DebugSpeed = rb.velocity.magnitude;
+        DebugSpeed = rb.linearVelocity.magnitude;
         DebugDesiredMoveSpeed = desiredMoveSpeed;
     }
 
@@ -192,19 +192,19 @@ public class PlayerController : MovementScript
         if (pm.dashing) return;
 
 
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
         if (flatVel.magnitude > desiredMoveSpeed && moveDir.magnitude > 0.1f)
         {
             Vector3 limitedVel = flatVel.normalized * desiredMoveSpeed;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
         }
     }
 
     void MovePlayer()
     { 
 
-        Vector3 currentVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        Vector3 currentVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
         Vector3 targetVelocity = moveDir * desiredMoveSpeed;
 
         float acceleration = (moveDir != Vector3.zero) ? accelRate : decelRate;
@@ -219,7 +219,7 @@ public class PlayerController : MovementScript
         // **Snappy stopping using Lerp**
         if (moveDir == Vector3.zero && currentVelocity.magnitude > 0.1f)
         {
-            rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, Time.fixedDeltaTime * stopLerpSpeed);
+            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, Vector3.zero, Time.fixedDeltaTime * stopLerpSpeed);
         }
     }
 
@@ -262,7 +262,7 @@ public class PlayerController : MovementScript
         canJump = false;
         grounded = false;
         canCheckForGround = false;
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
         Invoke(nameof(ResetGroundCheck), 0.1f);
     }
@@ -309,8 +309,8 @@ public class PlayerController : MovementScript
         Rigidbody frameBody,
         Vector3 direction)
     {
-        Vector3 velocity = targetBody.velocity;
-        Vector3 hitBodyVelocity = frameBody ? frameBody.velocity : default;
+        Vector3 velocity = targetBody.linearVelocity;
+        Vector3 hitBodyVelocity = frameBody ? frameBody.linearVelocity : default;
         float rayDirectionSpeed = Vector3.Dot(direction, velocity);
         float hitBodyRayDirectionSpeed = Vector3.Dot(direction, hitBodyVelocity);
         return rayDirectionSpeed - hitBodyRayDirectionSpeed;

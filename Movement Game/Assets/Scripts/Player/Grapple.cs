@@ -74,7 +74,7 @@ public class Grapple : MovementScript
     void SetVelocity()
     {
         enableMovementOnNextTouch = true;
-        rb.velocity = velocityToSet;
+        rb.linearVelocity = velocityToSet;
     }
 
     void ResetRestrictions()

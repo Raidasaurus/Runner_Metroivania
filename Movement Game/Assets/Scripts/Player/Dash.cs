@@ -51,7 +51,7 @@ public class Dash : MovementScript
 
     void DelayedDash()
     {
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         rb.AddForce(delayedDashForce, ForceMode.VelocityChange);
     }
 

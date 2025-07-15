@@ -58,7 +58,7 @@ public class Climbing : MovementScript
 
     void ClimbingMovement()
     {
-        rb.velocity = new Vector3(rb.velocity.x, climbSpeed, rb.velocity.z);
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, climbSpeed, rb.linearVelocity.z);
     }
 
     void StopClimbing()

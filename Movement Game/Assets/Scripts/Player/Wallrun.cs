@@ -124,7 +124,7 @@ public class Wallrun : MovementScript
 
         wallRunTimer = maxWallRunTime;
 
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
         if (wallLeft) pm.cam.DoTilt(-5f);
         if (wallRight) pm.cam.DoTilt(5f);
@@ -166,7 +166,7 @@ public class Wallrun : MovementScript
             Vector3 forceToApply = transform.up * wallJumpUpForce + wallNormal * wallJumpSideForce;
 
 
-            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(forceToApply, ForceMode.Impulse);
             pm.cam.DoTilt(0f);
         }
