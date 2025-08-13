@@ -44,9 +44,11 @@ public class PlayerController : MovementScript
 
     [Header("References")]
     PlayerManager pm;
+    PlayerAnimations anim;
     [HideInInspector] public Rigidbody rb;
 
     float moveSpeed;
+    [HideInInspector] public float aniMoveSpeed;
     float desiredMoveSpeed;
     float hInput;
     float vInput;
@@ -75,6 +77,7 @@ public class PlayerController : MovementScript
     {
         pm = GetComponent<PlayerManager>();
         rb = GetComponent<Rigidbody>();
+        anim = GetComponent<PlayerAnimations>();
 
         pm.jump.performed += ctx => Jump();
         pm.crouch.performed += ctx => Crouch();
@@ -90,7 +93,11 @@ public class PlayerController : MovementScript
             if (Physics.Raycast(transform.position, Vector3.down, hoverHeight - jumpCheck, whatIsGround))
             {
                 Invoke(nameof(ResetJump), jumpCD);
-                if (canCheckForGround) grounded = true;
+                if (canCheckForGround)
+                {
+                    anim.LandSoft();
+                    grounded = true;
+                }
             }
         }
         
@@ -114,7 +121,6 @@ public class PlayerController : MovementScript
     {
         Vector2 input = pm.move.ReadValue<Vector2>();
         moveDir = (pm.orientation.forward * input.y + pm.orientation.right * input.x).normalized;
-
         hoverHeight = (pm.crouching || pm.sliding) ? (moveDir.magnitude > 0 ? hoverHeightCrouchMoving : hoverHeightCrouching) : hoverHeightStanding;
 
         
@@ -264,6 +270,7 @@ public class PlayerController : MovementScript
         canCheckForGround = false;
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        anim.Jump();
         Invoke(nameof(ResetGroundCheck), 0.1f);
     }
 

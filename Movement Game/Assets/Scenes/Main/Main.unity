@@ -50616,7 +50616,7 @@ Transform:
   m_GameObject: {fileID: 2971985008939765285}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.405, z: 0}
+  m_LocalPosition: {x: 0, y: 0.51, z: 0.08}
   m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -50979,6 +50979,7 @@ GameObject:
   - component: {fileID: 7224411331027763447}
   - component: {fileID: 8863374570340422189}
   - component: {fileID: 1510830301}
+  - component: {fileID: 8863374570340422192}
   - component: {fileID: 1510830300}
   - component: {fileID: 1510830295}
   - component: {fileID: 665861119725781298}
@@ -58050,9 +58051,23 @@ MonoBehaviour:
   maxDistance: 2
   castRadius: 0.35
   rb: {fileID: 7224411331027763447}
+  aniMoveSpeed: 0
   grounded: 1
   canJump: 1
   canSlide: 1
+--- !u!114 &8863374570340422192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1568199453948900828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2f0137b77572b24488de7997e7d8d0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ani: {fileID: 4651561302302822015}
 --- !u!4 &8870062505666919362
 Transform:
   m_ObjectHideFlags: 0
