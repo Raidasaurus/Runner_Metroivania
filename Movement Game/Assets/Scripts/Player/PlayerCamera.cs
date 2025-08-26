@@ -16,8 +16,10 @@ public class PlayerCamera : MonoBehaviour
     [Header("References")]
     public Transform orientation;
     public Transform holder;
+    public Transform gfx;
     public Camera mainCamera;
     public CinemachineVirtualCamera vCam;
+    public PlayerAnimations gfxAnimator;
 
     float xRot;
     float yRot;
@@ -49,11 +51,25 @@ public class PlayerCamera : MonoBehaviour
         yRot += mouseX;
 
         xRot -= mouseY;
-        xRot = Mathf.Clamp(xRot, -90f, 90f);
+        xRot = Mathf.Clamp(xRot, -65f, 80f);
 
         transform.rotation = Quaternion.Euler(xRot, yRot, 0);
         holder.rotation = Quaternion.Euler(xRot, yRot, 0);
         orientation.rotation = Quaternion.Euler(0, yRot, 0);
+
+        // GFX horizontal rotation towards camera direction
+        Vector3 targetDir = orientation.forward;
+        targetDir.y = 0; // Ignore vertical rotation
+        if (targetDir.sqrMagnitude > 0.001f)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(targetDir);
+            gfx.rotation = Quaternion.Slerp(gfx.rotation, targetRot, Time.deltaTime * 10f);
+        }
+
+        // Animator: check if rotating significantly
+        float angleDiff = Quaternion.Angle(gfx.rotation, Quaternion.LookRotation(targetDir));
+        bool isTurning = angleDiff > 1f; // Small threshold
+        gfxAnimator.ani.SetBool("isMoving", isTurning);
     }
 
     public void DoFov(float targetFOV)

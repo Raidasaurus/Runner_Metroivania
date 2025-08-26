@@ -67,6 +67,6 @@ public class Melee : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawSphere(hitPos.position, hitRadius);
+        //Gizmos.DrawSphere(hitPos.position, hitRadius);
     }
 }
